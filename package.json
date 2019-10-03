@@ -1,0 +1,25 @@
+{
+  "name": "pg-transactions",
+  "version": "1.0.0",
+  "description": "Wrapper on top of node-postgres to handle transactions with minimal codebase changes",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manoj-nama/pg-transactions.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/manoj-nama/pg-transactions/issues"
+  },
+  "homepage": "https://github.com/manoj-nama/pg-transactions#readme",
+  "devDependencies": {
+    "mocha": "^6.2.1",
+    "should": "^13.2.3",
+    "sinon": "^7.5.0"
+  }
+}
