@@ -1,4 +1,4 @@
-let log = require('../log');
+let log = {};
 const managers = {};
 
 class ContextManager {
@@ -22,7 +22,7 @@ class ContextManager {
 
   async release() {
     if (this.client) {
-      this.client.release();
+      this.client.end();
       this.client = null;
     }
   }
