@@ -1,15 +1,13 @@
-const Manager = require('./transaction-manager');
-const { getManager: getTransactionManager } = require('./transaction-manager/manager')
-const { getRequestContext } = require('./request-context');
+const {
+  init,
+  getManager,
+  transactify,
+} = require('./transaction-manager');
+const { markTransactionFailed } = require('./transaction-manager/error-interceptor');
 
-exports.TransactionManager = require('./transaction-manager/manager');
 exports.init = (options) => {
-  Manager.init(options);
+  init(options);
 };
-exports.getManager = (identifier) => {
-  const context = getRequestContext(identifier);
-  if (context) {
-    const transactionId = context.get('id');
-    return getTransactionManager(transactionId);
-  }
-};
+exports.getManager = getManager;
+exports.transactify = transactify;
+exports.markTransactionFailed = markTransactionFailed;

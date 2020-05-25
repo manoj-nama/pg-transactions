@@ -4,8 +4,8 @@ const {
 const {
   getManager,
 } = require('./manager');
-const nsIdentifier = 'service-risk-register-db-transaction';
 
+const nsIdentifier = 'service-pg-transaction';
 
 const fetchTransaction = () => {
   const context = getRequestContext(nsIdentifier);

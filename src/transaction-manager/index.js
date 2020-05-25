@@ -4,30 +4,28 @@ const {
   cleanUpContext
 } = require('../request-context');
 const {
-  getManager,
+  getManager: getTransactionManager,
   removeManager,
   createManager,
   init: initManager
-} = require('./context-manager');
-const ErrorInterceptor = require('./error-interceptor');
+} = require('./manager');
+
 let log = require('../log');
 let nsIdentifier = 'pg-db-transaction';
 
-
-const fetchTransaction = () => {
-  const context = getRequestContext(nsIdentifier);
+const getManager = (identifier) => {
+  const context = getRequestContext(identifier);
   try {
-    const transactionId = context.get('tid');
-    return getManager(transactionId);
+    if (context) {
+      const transactionId = context.get('id');
+      return getTransactionManager(transactionId);
+    }
   } catch (err) {
-    console.log(err);
     log.error('Transaction not initialized for this Query');
   }
 };
 
 const wrapHandlerWithContext = handler => (req, res, next) => {
-  ErrorInterceptor.enable(onErrorInit);
-
   const context = getRequestContext(nsIdentifier);
   const tid = uuid();
   createManager(tid);
@@ -38,15 +36,8 @@ const wrapHandlerWithContext = handler => (req, res, next) => {
   });
 };
 
-const onErrorInit = () => {
-  const transaction = fetchTransaction();
-  if (transaction) {
-    transaction.markFailed();
-  }
-};
-
 const postHandler = async () => {
-  const transaction = fetchTransaction();
+  const transaction = getManager(nsIdentifier);
 
   removeManager(tid);
   if (transaction.success) {
@@ -63,9 +54,12 @@ exports.init = ({ identifier, logger }) => {
   log = logger;
   initManager(logger);
 };
+
 exports.transactify = handler => {
   return [
     wrapHandlerWithContext(handler),
     postHandler,
   ];
 };
+
+exports.getManager = getManager;
